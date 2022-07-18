@@ -12,6 +12,10 @@ namespace EksiSozlukClone.Infrastructure.Persistence.Context
     public class EksiSozlukCloneContext:DbContext
     {
         public const string DEFAULT_SCHEMA = "dbo";
+        public EksiSozlukCloneContext()
+        {
+
+        }
         public EksiSozlukCloneContext(DbContextOptions options) : base(options)
         {
 
@@ -25,9 +29,21 @@ namespace EksiSozlukClone.Infrastructure.Persistence.Context
         public DbSet<EntryCommentFavorite>EntryCommentFavorites { get; set; }  
         public DbSet<EmailConfirmation>EmailConfirmations { get; set; }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                var connStr = "Server=DESKTOP-V8QLR1L\\SQLEXPRESS;Database=EksiSozluk;Trusted_Connection=True;";
+                optionsBuilder.UseSqlServer(connStr, opt =>
+                {
+                    opt.EnableRetryOnFailure();
+                });
+
+            }
+        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            OnBeforeSave();
+          
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
 
