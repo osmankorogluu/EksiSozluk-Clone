@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace EksiSozlukClone.Infrastructure.Persistence.Context
 {
-    public class EksiSozlukCloneContext:DbContext
+    public class EksiSozlukCloneContext : DbContext
     {
         public const string DEFAULT_SCHEMA = "dbo";
         public EksiSozlukCloneContext()
@@ -20,30 +20,32 @@ namespace EksiSozlukClone.Infrastructure.Persistence.Context
         {
 
         }
-        public DbSet<User>Users { get; set; }  
-        public DbSet<EksiSozlukClone.Api.Domain.Models.Entry> Entries { get; set; }  
-        public DbSet<EntryVote> EntryVotes { get; set; }  
-        public DbSet<EntryFavorite>EntryFavorites { get; set; }  
-        public DbSet<EksiSozlukClone.Api.Domain.Models.EntryComment>EntryComments { get; set; }  
-        public DbSet<EntryCommentVote>EntryCommentVotes { get; set; }  
-        public DbSet<EntryCommentFavorite>EntryCommentFavorites { get; set; }  
-        public DbSet<EmailConfirmation>EmailConfirmations { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<EksiSozlukClone.Api.Domain.Models.Entry> Entries { get; set; }
+
+        public DbSet<EntryVote> EntryVotes { get; set; }
+        public DbSet<EntryFavorite> EntryFavorites { get; set; }
+
+        public DbSet<EksiSozlukClone.Api.Domain.Models.EntryComment> EntryComments { get; set; }
+        public DbSet<EntryCommentVote> EntryCommentVotes { get; set; }
+        public DbSet<EntryCommentFavorite> EntryCommentFavorites { get; set; }
+
+        public DbSet<EmailConfirmation> EmailConfirmations { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var connStr = "Server=DESKTOP-V8QLR1L\\SQLEXPRESS;Database=EksiSozluk;Trusted_Connection=True;";
+                var connStr = "Server=DESKTOP-V8QLR1L\\SQLEXPRESS;Database=EksiSozluk;Trusted_Connection=True";
                 optionsBuilder.UseSqlServer(connStr, opt =>
                 {
                     opt.EnableRetryOnFailure();
                 });
-
             }
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-          
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
 
@@ -52,11 +54,13 @@ namespace EksiSozlukClone.Infrastructure.Persistence.Context
             OnBeforeSave();
             return base.SaveChanges();
         }
+
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
             OnBeforeSave();
             return base.SaveChanges(acceptAllChangesOnSuccess);
         }
+
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
         {
             OnBeforeSave();
@@ -67,23 +71,22 @@ namespace EksiSozlukClone.Infrastructure.Persistence.Context
             OnBeforeSave();
             return base.SaveChangesAsync(cancellationToken);
         }
+
         private void OnBeforeSave()
         {
-            var addedEntities = ChangeTracker.Entries()
-                .Where(i => i.State == EntityState.Added)
-                .Select(i => (BaseEntity)i.Entity);
-            PrepareAddedEntities(addedEntities);
+            var addedEntites = ChangeTracker.Entries()
+                                    .Where(i => i.State == EntityState.Added)
+                                    .Select(i => (BaseEntity)i.Entity);
+
+            PrepareAddedEntities(addedEntites);
         }
-        private void PrepareAddedEntities(IEnumerable<BaseEntity>entities)
+
+        private void PrepareAddedEntities(IEnumerable<BaseEntity> entities)
         {
             foreach (var entity in entities)
             {
                 if (entity.CreateDate == DateTime.MinValue)
-                
-
-                
-                entity.CreateDate = DateTime.Now;
-
+                    entity.CreateDate = DateTime.Now;
             }
         }
     }

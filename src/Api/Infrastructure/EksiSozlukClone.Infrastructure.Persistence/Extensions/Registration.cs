@@ -16,12 +16,14 @@ namespace EksiSozlukClone.Infrastructure.Persistence.Extensions
         {
             services.AddDbContext<EksiSozlukCloneContext>(conf =>
             {
-                var connStr = configuration["BlazorSozlukDbConnectionString"].ToString();
+                var connStr = configuration["BloggingDatabase"].ToString();
                 conf.UseSqlServer(connStr, opt =>
                 {
                     opt.EnableRetryOnFailure();
                 });
             });
+            var seedData = new SeedData();
+            seedData.SeedAsync(configuration).GetAwaiter().GetResult();
             return services;
         }
     }
