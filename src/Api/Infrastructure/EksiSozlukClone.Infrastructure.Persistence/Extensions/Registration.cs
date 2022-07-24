@@ -1,4 +1,6 @@
-﻿using EksiSozlukClone.Infrastructure.Persistence.Context;
+﻿using EksiSozlukClone.Api.Applicaton.Interfaces.Repositories;
+using EksiSozlukClone.Infrastructure.Persistence.Context;
+using EksiSozlukClone.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,8 +24,10 @@ namespace EksiSozlukClone.Infrastructure.Persistence.Extensions
                     opt.EnableRetryOnFailure();
                 });
             });
-            var seedData = new SeedData();
-            seedData.SeedAsync(configuration).GetAwaiter().GetResult();
+            // var seedData = new SeedData();
+            //seedData.SeedAsync(configuration).GetAwaiter().GetResult();
+
+            services.AddScoped<IUserRepository, UserRepository>();
             return services;
         }
     }

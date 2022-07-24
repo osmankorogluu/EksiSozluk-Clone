@@ -18,6 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Core\EksiSozlukClone.Api.Applicaton\EksiSozlukClone.Api.Applicaton.csproj" />
       <ProjectReference Include="..\..\Core\EksiSozlukClone.Api.Domain\EksiSozlukClone.Api.Domain.csproj" />
     </ItemGroup>
 
